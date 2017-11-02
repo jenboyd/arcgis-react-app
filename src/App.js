@@ -21,7 +21,6 @@ const mapDispatchToProps = (dispatch) => {
 
 class App extends Component {
   componentDidMount() {
-    
     if (!this.props.mapCtrl) {
       this.props.createMap(this.refs.mapView);
     }
@@ -30,13 +29,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2><Button bsStyle="primary">Welcome</Button> to React</h2>     
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
         <div ref='mapView' className='map-view'></div>
       </div>
     );
