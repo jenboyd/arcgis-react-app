@@ -38,8 +38,8 @@ const map = (state = { }, action) => {
       let view = new MapView({
         container: action.domNode,
         map,
-        zoom: 3.5,
-        center: [270, 45]
+        zoom: 4,
+        center: [265, 38]
       })
 
       let legend = new Legend({

@@ -29,15 +29,15 @@ class App extends Component {
   }
 
   render() {
-    
+
     const filters = this.state.filters.map((filter) => {
       return(<button onClick={() => this.props.createMap(this.refs.mapView, filter.layerID)}>{filter.label}</button>)
     })
 
     return (
-      <div className="App">
+      <div className="App"> 
+        <div className='filters'>{filters}</div>
         <div ref='mapView' className='map-view'></div>
-        {filters}
       </div>
     );
   }
