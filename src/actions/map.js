@@ -1,7 +1,7 @@
-export const createMap = (domNode, layerID) => {
+export const createMap = (domNode, filter) => {
   return {
     type: 'CREATE_MAP',
     domNode,
-    layerID
+    filter
   }
 }
