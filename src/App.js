@@ -30,11 +30,18 @@ class App extends Component {
 
   updateFilter(selFilter) {
     if (selFilter.checked) { return }
-    const filters = this.state.filters // Make a copy of filters to modify
+
+     // Update state to reflect filter selection
+    const filters = this.state.filters
     filters.map((f) => {
       f.checked = selFilter.layerID === f.layerID
     })
-    this.setState({ filters }) // Update state to reflect filter selection
+    this.setState({ filters })
+
+    //  Create new map with selected filter. ** It would be better to only update
+    //  feature layers without creating a new map every time. Possible solution might be
+    //  to save each map in the store when they are created and only create new ones
+    //  when necessary**
     this.props.createMap(this.refs.mapView, selFilter)
   }
 

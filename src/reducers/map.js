@@ -9,7 +9,9 @@ const map = (state = { }, action) => {
   switch (action.type) {
 
     case 'CREATE_MAP':
-      const popupTemplate = {
+
+      // Create templates for popups for each map layer
+      const ageTemplate = {
           title: "<p>{STATE_NAME}</p>",
           content: "<p>Total Veterans: {Grand_Tota}" +
           `<p>${action.filter.label === 'Average Age' ?
@@ -32,16 +34,46 @@ const map = (state = { }, action) => {
           ]
       };
 
-      let featureLayer = new FeatureLayer({
+      const centerTemplate = {
+          title: "<p>{NAME}</p>",
+          content: "<p>{ADDRESS}</p>" +
+            "<p>{CITY}, {STATE}, {ZIP}</p>"
+      };
+
+
+      // Define specific styles for the veteranCenters layer
+      let centersRenderer = {
+        type: "simple",
+        symbol: {
+          type: "simple-marker",
+          size: 8,
+          color: [ 19, 199, 255, 0.5 ],
+          outline: {
+            width: 0.5,
+            color: "grey"
+          }
+        }
+      };
+
+      // Add Feature Layers
+      let veteransByAge = new FeatureLayer({
         url: "http://maps7.arcgisonline.com/arcgis/rest/services/Veterans_by_Age/MapServer/",
         layerId: action.filter.layerID,
         outFields: ["*"],
-        popupTemplate: popupTemplate
+        popupTemplate: ageTemplate
       });
 
+      let veteranCenters = new FeatureLayer({
+        url: "https://services2.arcgis.com/1cdV1mIckpAyI7Wo/arcgis/rest/services/Veterans_Health_Administration_Medical_Facilities/FeatureServer/0/query?outFields=*&where=1%3D1",
+        outFields: ["*"],
+        renderer: centersRenderer,
+        popupTemplate: centerTemplate
+      });
+
+      // Create map and map view
       const map = new EsriMap({
         basemap: 'gray-vector',
-        layers: [ featureLayer ]
+        layers: [ veteransByAge, veteranCenters ]
       });
 
 
@@ -52,16 +84,16 @@ const map = (state = { }, action) => {
         center: [265, 38]
       })
 
+      // Add legend and layers list wigets to map
       let legend = new Legend({
         view: view,
         layerInfos: [
           {
-            layer: featureLayer,
+            layer: veteransByAge,
             title: "Legend"
           }
         ]
       });
-
       view.ui.add(legend, "bottom-right");
 
       let layerList = new LayerList({
