@@ -50,12 +50,21 @@ class App extends Component {
   render() {
 
     const filters = this.state.filters.map((filter) => {
-      return(<button className={filter.checked ? 'checked' : ''} onClick={() => this.updateFilter(filter)}>{filter.label}</button>)
+      return(<button className={filter.checked ? 'checked' : ''} onClick={() => this.updateFilter(filter)}>{filter.label === 'Average Age' ? filter.label : 'Veterans in their ' + filter.label}</button>)
     })
 
     return (
-      <div className="App">
-        <div className='filters'>{filters}</div>
+      <div className="app">
+        <header>
+          <div>
+            <h2>Veterans in the U.S.</h2>
+            <p>Data pulled from the U.S. Department of Veteran Affairs</p>
+          </div>
+          <div>
+            <p>Filter by age:</p>
+            <div className='filters'>{filters}</div>
+          </div>
+        </header>
         <div ref='mapView' className='map-view'></div>
       </div>
     );
