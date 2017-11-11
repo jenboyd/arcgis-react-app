@@ -55,25 +55,30 @@ const map = (state = { }, action) => {
         }
       };
 
-      // Add Feature Layers
-      let veteransByAge = new FeatureLayer({
-        url: "http://maps7.arcgisonline.com/arcgis/rest/services/Veterans_by_Age/MapServer/",
-        layerId: action.filter.layerID,
-        outFields: ["*"],
-        popupTemplate: ageTemplate
-      });
+      const featureLayerArray = [0, 1, 2, 3, 4, 5, 6, 7].map( (id) => {
+        return new FeatureLayer({
+          url: "http://maps7.arcgisonline.com/arcgis/rest/services/Veterans_by_Age/MapServer/",
+          layerId: id,
+          visible: id === action.filter.layerID,
+          outFields: ["*"],
+          popupTemplate: ageTemplate
+        });
+      })
 
       let veteranCenters = new FeatureLayer({
         url: "https://services2.arcgis.com/1cdV1mIckpAyI7Wo/arcgis/rest/services/Veterans_Health_Administration_Medical_Facilities/FeatureServer/0/query?outFields=*&where=1%3D1",
         outFields: ["*"],
+        id: 'veteranCenters',
         renderer: centersRenderer,
         popupTemplate: centerTemplate
       });
 
+      featureLayerArray.push(veteranCenters)
+
       // Create map and map view
       const map = new EsriMap({
         basemap: 'gray-vector',
-        layers: [ veteransByAge, veteranCenters ]
+        layers: featureLayerArray
       });
 
 
@@ -87,22 +92,11 @@ const map = (state = { }, action) => {
       // Add legend and layers list wigets to map
       let legend = new Legend({
         view: view,
-        layerInfos: [
-          {
-            layer: veteransByAge,
-            title: "Legend"
-          }
-        ]
       });
       view.ui.add(legend, "bottom-right");
 
-      let layerList = new LayerList({
-        view: view
-      });
-      view.ui.add(layerList, { position: "top-right" });
-
       return {
-        mapCtrl: view,
+        mapCtrl: map,
       };
 
     default:

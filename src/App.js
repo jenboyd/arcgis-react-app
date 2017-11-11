@@ -33,16 +33,18 @@ class App extends Component {
 
      // Update state to reflect filter selection
     const filters = this.state.filters
-    filters.map((f) => {
+    filters.forEach((f) => {
       f.checked = selFilter.layerID === f.layerID
     })
     this.setState({ filters })
 
-    //  Create new map with selected filter. ** It would be better to only update
-    //  feature layers without creating a new map every time. Possible solution might be
-    //  to save each map in the store when they are created and only create new ones
-    //  when necessary**
-    this.props.createMap(this.refs.mapView, selFilter)
+    this.props.mapCtrl.allLayers.forEach(function(layer) {
+      if(layer.type !== 'vector-tile' && layer.id !== 'veteranCenters' && layer.visible) {
+        layer.visible = false;
+      } else if (layer.layerId === selFilter.layerID) {
+        layer.visible = true;
+      }
+    });
   }
 
   render() {
